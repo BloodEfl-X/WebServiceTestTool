@@ -10,6 +10,7 @@ from WebServiceTestTool.WebServiceClient import WebServiceClint
 from WebServiceTestTool.WebToolConfig import WebToolConfig
 from WebServiceTestTool.FunLogWin import FunLogDlg
 
+
 class WebServiceToolWin(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super(WebServiceToolWin, self).__init__()
@@ -39,7 +40,7 @@ class WebServiceToolWin(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def init_win_info(self):
         settingConfig = QtCore.QSettings(self.configDlg.configFileName, QtCore.QSettings.IniFormat)
-        winSize = settingConfig.value("WinInfo/WinSize");
+        winSize = settingConfig.value("WinInfo/WinSize")
         if(winSize is not None and isinstance(winSize, QtCore.QSize) and winSize.isValid()):
             self.resize(winSize)
 
@@ -73,7 +74,7 @@ class WebServiceToolWin(QtWidgets.QMainWindow, Ui_MainWindow):
 
         errorInfo, result = self.webClient.load_web_info(webAddress)
         if(result == False):
-            self.textReturnValue.setText(errorInfo)
+            self.textReturnValue.setPlainText(errorInfo)
             return
 
         funCount = len(self.webClient.webFunList)
@@ -131,8 +132,13 @@ class WebServiceToolWin(QtWidgets.QMainWindow, Ui_MainWindow):
         self.statusbar.showMessage("开始调用......")
         beginTiem = time.perf_counter()
 
+        logFile = open('web_server_log.txt', mode='a', encoding='utf-8')
+        logFile.write('开始输出结果')
         returnValue = self.webClient.execute_web_fun(webFunName, **paramLsit)
-        self.textReturnValue.setText(returnValue)
+        logFile.write(returnValue)
+        logFile.close()
+
+        self.textReturnValue.setPlainText(returnValue)
 
         endTiem = time.perf_counter()
         self.statusbar.showMessage("调用结束，耗时：%0.3f秒" % (endTiem - beginTiem))
