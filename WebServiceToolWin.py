@@ -132,11 +132,7 @@ class WebServiceToolWin(QtWidgets.QMainWindow, Ui_MainWindow):
         self.statusbar.showMessage("开始调用......")
         beginTiem = time.perf_counter()
 
-        logFile = open('web_server_log.txt', mode='a', encoding='utf-8')
-        logFile.write('开始输出结果')
         returnValue = self.webClient.execute_web_fun(webFunName, **paramLsit)
-        logFile.write(returnValue)
-        logFile.close()
 
         self.textReturnValue.setPlainText(returnValue)
 
